@@ -1,7 +1,10 @@
+#include <cstddef>
 #include <iostream>
+#include <new>
 #include <random>
 #include <algorithm>
 #include <ctime>
+#include <stdexcept>
 
 #include "chatlogic.h"
 #include "graphnode.h"
@@ -44,6 +47,39 @@ ChatBot::~ChatBot()
 
 //// STUDENT CODE
 ////
+ChatBot::ChatBot(const ChatBot &source) // copy constructor
+{
+    std::cout << "ChatBot Copy Constructor" << std::endl;
+    /* Copy dynamic memory for _image attribute */
+    try 
+    {
+        if (source._image != nullptr) 
+        {
+            this->_image = new wxBitmap(source._image->GetSubBitmap(
+                wxRect(0, 0, source._image->GetWidth(), source._image->GetHeight())
+            ));
+            
+        }
+        else 
+        {
+            throw std::invalid_argument("Source image is null");
+        }
+
+    } 
+    catch (const std::bad_alloc &e) 
+    {
+        std::cerr << "Memory allocation failed" << e.what() << std::endl;
+    }
+    catch (const std::invalid_argument &e)
+    {
+        this->_image = NULL;
+    }
+
+    /* Copy other attributes */
+    this->_chatLogic = source._chatLogic;
+    this->_currentNode = source._currentNode;
+    this->_rootNode = source._rootNode;
+}
 
 ////
 //// EOF STUDENT CODE
