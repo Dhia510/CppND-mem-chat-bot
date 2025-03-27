@@ -81,6 +81,51 @@ ChatBot::ChatBot(const ChatBot &source) // copy constructor
     this->_rootNode = source._rootNode;
 }
 
+ChatBot& ChatBot::operator=(const ChatBot &source) // copy assignment operator
+{
+    std::cout << "ChatBot Copy assignement operator" << std::endl;
+
+    if (this != &source) 
+    {
+        /* Copy dynamic memory */
+        try 
+        {
+            if (source._image != nullptr) 
+            {
+                delete this->_image;
+                this->_image = new wxBitmap(source._image->GetSubBitmap(
+                    wxRect(0, 0, source._image->GetWidth(), source._image->GetHeight())
+                ));
+
+            }
+            else 
+            {
+                throw std::invalid_argument("image pointer is null");
+            }
+        } 
+        catch (const std::invalid_argument &e) 
+        {
+            _image = nullptr;
+        }
+        catch (const std::bad_alloc &e)
+        {
+            _image = nullptr;
+        }
+
+        /* Copy other attributes */
+        this->_chatLogic = source._chatLogic;
+        this->_currentNode = source._currentNode;
+        this->_rootNode = source._rootNode;
+    }
+    else 
+    {
+        //Nothing to do here  
+    }
+
+    // Implémentation du déplacement
+    return *this;
+}
+
 ////
 //// EOF STUDENT CODE
 
