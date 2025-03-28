@@ -1,7 +1,10 @@
+#include <cstddef>
 #include <iostream>
+#include <new>
 #include <random>
 #include <algorithm>
 #include <ctime>
+#include <stdexcept>
 
 #include "chatlogic.h"
 #include "graphnode.h"
@@ -44,7 +47,129 @@ ChatBot::~ChatBot()
 
 //// STUDENT CODE
 ////
+ChatBot::ChatBot(const ChatBot &source) // copy constructor
+{
+    std::cout << "ChatBot Copy Constructor" << std::endl;
+    /* Copy dynamic memory for _image attribute */
+    try 
+    {
+        if (source._image != nullptr) 
+        {
+            this->_image = new wxBitmap(source._image->GetSubBitmap(
+                wxRect(0, 0, source._image->GetWidth(), source._image->GetHeight())
+            ));
+            
+        }
+        else 
+        {
+            throw std::invalid_argument("Source image is null");
+        }
 
+    } 
+    catch (const std::bad_alloc &e) 
+    {
+        std::cerr << "Memory allocation failed" << e.what() << std::endl;
+    }
+    catch (const std::invalid_argument &e)
+    {
+        this->_image = NULL;
+    }
+
+    /* Copy other attributes */
+    this->_chatLogic = source._chatLogic;
+    this->_currentNode = source._currentNode;
+    this->_rootNode = source._rootNode;
+}
+
+ChatBot& ChatBot::operator=(const ChatBot &source) // copy assignment operator
+{
+    std::cout << "ChatBot Copy assignement operator" << std::endl;
+
+    if (this != &source) 
+    {
+        /* Copy dynamic memory */
+        try 
+        {
+            if (source._image != nullptr) 
+            {
+                delete this->_image;
+                this->_image = new wxBitmap(source._image->GetSubBitmap(
+                    wxRect(0, 0, source._image->GetWidth(), source._image->GetHeight())
+                ));
+
+            }
+            else 
+            {
+                throw std::invalid_argument("image pointer is null");
+            }
+        } 
+        catch (const std::invalid_argument &e) 
+        {
+            _image = nullptr;
+        }
+        catch (const std::bad_alloc &e)
+        {
+            _image = nullptr;
+        }
+
+        /* Copy other attributes */
+        this->_chatLogic = source._chatLogic;
+        this->_currentNode = source._currentNode;
+        this->_rootNode = source._rootNode;
+    }
+    else 
+    {
+        //Nothing to do here  
+    }
+
+    // Implémentation du déplacement
+    return *this;
+}
+
+ChatBot::ChatBot(ChatBot &&source) // move constructor
+{
+    std::cout << "ChatBot Move constructor" << std::endl;
+    /* Move image */
+    this->_image = source._image;
+    source._image = NULL;
+    /* Move Chatlogic */
+    this->_chatLogic = source._chatLogic;
+    source._chatLogic = nullptr;
+    /* Move currentNode */
+    this->_currentNode = source._currentNode;
+    source._currentNode = nullptr;
+    /* Move rootNode */
+    this->_rootNode = source._rootNode;
+    source._rootNode = nullptr;
+}
+
+ChatBot&  ChatBot::operator=(ChatBot &&source) // move assignment operator
+{
+    std::cout << "ChatBot Move assignement operator" << std::endl;
+
+    if (this != &source) 
+    {
+        delete this->_image;
+        /* Move image */
+        this->_image = source._image;
+        source._image = NULL;
+        /* Move Chatlogic */
+        this->_chatLogic = source._chatLogic;
+        source._chatLogic = nullptr;
+        /* Move currentNode */
+        this->_currentNode = source._currentNode;
+        source._currentNode = nullptr;
+        /* Move rootNode */
+        this->_rootNode = source._rootNode;
+        source._rootNode = nullptr;
+    }
+    else 
+    {
+
+    }
+
+    return *this;
+}
 ////
 //// EOF STUDENT CODE
 
