@@ -134,6 +134,7 @@ ChatBot::ChatBot(ChatBot &&source) // move constructor
     source._image = NULL;
     /* Move Chatlogic */
     this->_chatLogic = source._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
     source._chatLogic = nullptr;
     /* Move currentNode */
     this->_currentNode = source._currentNode;
@@ -155,6 +156,7 @@ ChatBot&  ChatBot::operator=(ChatBot &&source) // move assignment operator
         source._image = NULL;
         /* Move Chatlogic */
         this->_chatLogic = source._chatLogic;
+        _chatLogic->SetChatbotHandle(this);
         source._chatLogic = nullptr;
         /* Move currentNode */
         this->_currentNode = source._currentNode;
