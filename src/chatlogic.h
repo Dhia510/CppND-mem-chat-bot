@@ -14,24 +14,15 @@ class GraphNode;
 class ChatLogic
 {
 private:
-    //// STUDENT CODE
-    ////
-
     // data handles (owned)
     std::vector<std::unique_ptr<GraphNode>> _nodes;
     std::vector<GraphEdge *> _edges;
-
-    ////
-    //// EOF STUDENT CODE
-
     // data handles (not owned)
     GraphNode *_currentNode;
     ChatBot *_chatBot;
     ChatBotPanelDialog *_panelDialog;
-
     // proprietary type definitions
     typedef std::vector<std::pair<std::string, std::string>> tokenlist;
-
     // proprietary functions
     template <typename T>
     void AddAllTokensToElement(std::string tokenID, tokenlist &tokens, T &element);
