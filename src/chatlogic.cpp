@@ -2,6 +2,7 @@
 #include <memory>
 #include <sstream>
 #include <iostream>
+#include <utility>
 #include <vector>
 #include <iterator>
 #include <tuple>
@@ -15,31 +16,12 @@
 
 ChatLogic::ChatLogic()
 {
-    //// STUDENT CODE
-    ////
-
-    // create instance of chatbot
-    _chatBot = new ChatBot("../images/chatbot.png");
-
-    // add pointer to chatlogic so that chatbot answers can be passed on to the GUI
-    _chatBot->SetChatLogicHandle(this);
-
-    ////
-    //// EOF STUDENT CODE
+    
 }
 
 ChatLogic::~ChatLogic()
 {
-    //// STUDENT CODE
-    ////
-
-    // delete chatbot instance
-    delete _chatBot;
-
-    // delete all edges
-
-    ////
-    //// EOF STUDENT CODE
+    
 }
 
 template <typename T>
@@ -191,6 +173,9 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
 
     // identify root node
     GraphNode *rootNode = nullptr;
+    ChatBot ChatBotInstance("../images/chatbot.png");
+    ChatBotInstance.SetChatLogicHandle(this);
+    
     for (auto it = std::begin(_nodes); it != std::end(_nodes); ++it)
     {
         // search for nodes which have no incoming edges
@@ -209,9 +194,8 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
     }
 
     // add chatbot to graph root node
-    _chatBot->SetRootNode(rootNode);
-    rootNode->MoveChatbotHere(_chatBot);
-    
+    ChatBotInstance.SetRootNode(rootNode);
+    rootNode->MoveChatbotHere(std::move(ChatBotInstance));
     ////
     //// EOF STUDENT CODE
 }
